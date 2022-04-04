@@ -34,7 +34,7 @@ const Task = React.memo((props: PropsTaskType) => {
                 onChange={onChangeHandler}
             />
 
-            <EditableSpan value={ props.title} onChange={onTitleChangeHandler} />
+            <EditableSpan value={props.title} onChange={onTitleChangeHandler} />
             <IconButton onClick={onClickHandler}>
                 <Delete />
             </IconButton>
