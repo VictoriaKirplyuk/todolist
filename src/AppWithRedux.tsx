@@ -13,6 +13,7 @@ import {
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from './state/tasks-reducer';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from './state/store';
+import {ApiComponent} from "./ApiComponent";
 
 export type FilterValuesType = "all" | "active" | "completed";
 export type TodolistType = {
@@ -91,6 +92,11 @@ function AppWithRedux() {
                 <Grid container style={{padding: "20px"}}>
                     <AddItemForm addItem={addTodolist}/>
                 </Grid>
+
+
+                <ApiComponent/>
+
+
                 <Grid container spacing={3}>
                     {
                         todolists.map(tl => {

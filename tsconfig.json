@@ -17,7 +17,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "downlevelIteration": true //для использования [..state] в ApiComponent строка 35
   },
   "include": [
     "src"
