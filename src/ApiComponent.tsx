@@ -1,29 +1,34 @@
 import React, {useState} from 'react'
-import {tasksAPI, todolistAPI} from "./API";
+import {todolistAPI} from "./API";
 
-
-type TodolistType = {
+export type TodolistType = {
     id: string
     title: string
     addedDate: string
     order: number
-
 }
 type StateType = Array<TodolistType> | null
 
-type TaskType = {
-    addedDate: string
-    deadline: string | null
-    description: string | null
-    id: string
-    order: number
-    priority: number
-    startDate: string | null
-    status: number
-    title: string
-    todoListId: string
+type TasksType = {
+    error: null | string
+    totalCount: number
+    items: Array<ItemTaskType>
 }
-type TaskStateType = Array<TaskType> | null
+export type ItemTaskType = {
+    id: string
+    title: string
+    description: null | string
+    todoListId: string
+    order: number | null
+    status: number
+    priority: number
+    startDate: null | string
+    deadline: null | string
+    addedDate: string
+}
+
+
+type TaskStateType = TasksType | null
 
 export const ApiComponent = () => {
 
@@ -40,15 +45,13 @@ export const ApiComponent = () => {
         todolistAPI.getTodolists()
             .then(res => setState(res.data))
     }
-
     const addTodolist = () => {
-        if(title != '') {
+        if (title != '') {
             todolistAPI.addTodolist(title)
-                .then(res => setState([res.data.data.item,...state]))
+                .then(res => setState([res.data.data.item, ...state]))
             setTitle('')
         }
     }
-
     const deleteTodolist = () => {
         const todoId = todolistId
 
@@ -58,14 +61,13 @@ export const ApiComponent = () => {
                     setState(state.filter(t => t.id != todoId))
                 }
             })
-            setTodolistId('')
+        setTodolistId('')
     }
-
     const updateTodolist = () => {
         todolistAPI.updateTodolist(todolistId, title)
             .then(res => {
-                if(res.status === 200) {
-                    if(state) {
+                if (res.status === 200) {
+                    if (state) {
                         const todoUpdate = state.find(t => t.id === todolistId)
                         todoUpdate ? todoUpdate.title = title : setError('Not a todolist')
                         setState([...state])
@@ -76,53 +78,34 @@ export const ApiComponent = () => {
             })
     }
 
+
     const getTask = () => {
-        tasksAPI.getTasks(todolistId)
-            .then( res =>
-                setTaskState(res.data.items)
-            )
-        setTodolistId('')
+
     }
     const addTask = () => {
-        tasksAPI.addTask(todolistId, taskTitle)
-            .then( res =>
-                setTaskState([res.data.data.item, ...taskState])
-            )
-    }
-    const deleteTask = () => {
-        //удаляется по id таски, а с id туду - 405 ошибка
-        const todoId = todolistId
-        const tId = taskId
-        tasksAPI.deleteTask(todoId, tId)
-            .then(res => {
-                if (taskState) {
-                    setTaskState(taskState.filter(t => t.id != tId))
-                }
-            })
-    }
-    const updateTask = () => {
-        //404 error
-        const todoId = todolistId
-        const tId = taskId
-        tasksAPI.updateTaskTitle(todoId, tId, taskTitle)
-            .then(res => {
-                console.log(res)
-            })
+
     }
 
+    const deleteTask = () => {
+
+    }
+    const updateTask = () => {
+
+    }
 
 
     return <div>
         {/*<div>{JSON.stringify(state)}</div><br/>*/}
         <div>{state
             ? state.map(t => <div key={t.id}>{JSON.stringify(t)}</div>)
-            : 'No todolists' }
+            : 'No todolists'}
         </div>
         <br/>
         <div>
             <div>
                 <input placeholder='titleTodolist' value={title} onChange={(e) => setTitle(e.currentTarget.value)}/>
-                <input placeholder='todolistId' value={todolistId} onChange={(e) => setTodolistId(e.currentTarget.value)}/>
+                <input placeholder='todolistId' value={todolistId}
+                       onChange={(e) => setTodolistId(e.currentTarget.value)}/>
             </div>
             <div>
                 <button onClick={getTodolists}>Get todolists</button>
@@ -133,12 +116,13 @@ export const ApiComponent = () => {
         </div>
         <br/>
         <div>
-            {<div>
-                { taskState
-                    ? taskState.map( t => <div key={t.id}>{JSON.stringify(t)}</div>)
+            <div>
+                {taskState
+                    ? taskState.items.map(t => <div key={t.id}>{JSON.stringify(t)}</div>)
                     : 'No tasks'
                 }
-            </div>}
+            </div>
+            <br/>
             <div>
                 <input placeholder='titleTask' value={taskTitle} onChange={(e) => setTaskTitle(e.currentTarget.value)}/>
                 <input placeholder='taskId' value={taskId} onChange={(e) => setTaskId(e.currentTarget.value)}/>
