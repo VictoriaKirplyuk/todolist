@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {todolistAPI} from "./API";
+import {tasksAPI, todolistAPI} from "./API";
 
 export type TodolistType = {
     id: string
@@ -79,13 +79,15 @@ export const ApiComponent = () => {
     }
 
 
-    const getTask = () => {
-
+    const getTasks = () => {
+        tasksAPI.getTasks(todolistId)
+            .then( res => setTaskState(res.data))
     }
     const addTask = () => {
-
+        tasksAPI.addTask(todolistId, taskTitle)
+            .then( res =>
+                taskState && setTaskState({...taskState, items: [res.data.data.item,  ...taskState.items]}))
     }
-
     const deleteTask = () => {
 
     }
@@ -128,7 +130,7 @@ export const ApiComponent = () => {
                 <input placeholder='taskId' value={taskId} onChange={(e) => setTaskId(e.currentTarget.value)}/>
             </div>
             <div>
-                <button onClick={getTask}>Get tasks</button>
+                <button onClick={getTasks}>Get tasks</button>
                 <button onClick={addTask}>Add task</button>
                 <button onClick={deleteTask}>Delete task</button>
                 <button onClick={updateTask}>Update task</button>
