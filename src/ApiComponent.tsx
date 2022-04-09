@@ -77,27 +77,42 @@ export const ApiComponent = () => {
                 setTodolistId('')
             })
     }
-
-
     const getTasks = () => {
         tasksAPI.getTasks(todolistId)
-            .then( res => setTaskState(res.data))
+            .then(res => setTaskState(res.data))
     }
     const addTask = () => {
         tasksAPI.addTask(todolistId, taskTitle)
-            .then( res =>
-                taskState && setTaskState({...taskState, items: [res.data.data.item,  ...taskState.items]}))
+            .then(res =>
+                taskState && setTaskState({...taskState, items: [res.data.data.item, ...taskState.items]}))
     }
     const deleteTask = () => {
-
+        tasksAPI.deleteTask(todolistId, taskId)
+            .then(res => {
+                if(res.status === 200) {
+                    taskState && setTaskState({...taskState, items: taskState.items.filter(t => t.id != taskId)})
+                }
+            })
     }
     const updateTask = () => {
+        tasksAPI.updateTaskTitle(todolistId, taskId, taskTitle)
+            .then( res => {
+                if (res.status === 200) {
+                    if (taskState) {
+                        const taskUpdate = taskState.items.find(t => t.id === taskId)
+                        taskUpdate ? taskUpdate.title = taskTitle : setError("No task")
+                        setTaskState({...taskState})
+                    }
+                }
+                })
+            .catch(e => {
+                console.log(e)
+            })
 
     }
 
 
     return <div>
-        {/*<div>{JSON.stringify(state)}</div><br/>*/}
         <div>{state
             ? state.map(t => <div key={t.id}>{JSON.stringify(t)}</div>)
             : 'No todolists'}

@@ -2,7 +2,7 @@ import * as axios from "axios";
 import {ItemTaskType, TodolistType} from "./ApiComponent";
 
 const instance = axios.default.create({
-    baseURL: 'https://social-network.samuraijs.com/api/1.0/',
+    baseURL: 'https://social-network.samuraijs.com/api/1.1',
     withCredentials: true,
     headers: {
         'API-KEY': 'ac6ed9cc-d092-4e25-9d0c-c69c23fe4d54'
@@ -38,6 +38,7 @@ export const todolistAPI = {
     }
 }
 
+
 export const tasksAPI = {
     getTasks(todolistId: string) {
         return instance.get<ResponseTaskType>(`/todo-lists/${todolistId}/tasks`)
@@ -49,6 +50,14 @@ export const tasksAPI = {
         return instance.delete<ResponseType<{}>>(`/todo-lists/${todolistId}/tasks/${taskId}`)
     },
     updateTaskTitle(todolistId: string, taskId: string, title: string) {
-        return instance.put<ResponseType<{item: ItemTaskType}>>(`/todo-lists/${todolistId}/tasks/${taskId}`, {title: title})
+        return instance.put<ResponseType<{item: ItemTaskType}>>(`/todo-lists/${todolistId}/tasks/${taskId}`, {
+            title: title,
+            description: null,
+            completed: true,
+            status: 0,
+            priority: 1,
+            startDate: null,
+            deadline: null
+        })
     }
 }
