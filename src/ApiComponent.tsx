@@ -14,13 +14,29 @@ type TasksType = {
     totalCount: number
     items: Array<ItemTaskType>
 }
+
+export enum TaskStatuses {
+    New = 0, //active
+    InProgress = 1,
+    Completed = 2, //completed
+    Draft = 3
+}
+
+// export enum TodoTaskPriority {
+//     Low = 0,
+//     Middle = 1,
+//     Hi = 2,
+//     urgently = 3,
+//     Later = 4
+// }
+
 export type ItemTaskType = {
     id: string
     title: string
     description: null | string
     todoListId: string
     order: number | null
-    status: number
+    status: TaskStatuses
     priority: number
     startDate: null | string
     deadline: null | string
@@ -28,7 +44,7 @@ export type ItemTaskType = {
 }
 
 
-type TaskStateType = TasksType | null
+export type TaskStateType = TasksType | null
 
 export const ApiComponent = () => {
 
@@ -89,14 +105,14 @@ export const ApiComponent = () => {
     const deleteTask = () => {
         tasksAPI.deleteTask(todolistId, taskId)
             .then(res => {
-                if(res.status === 200) {
+                if (res.status === 200) {
                     taskState && setTaskState({...taskState, items: taskState.items.filter(t => t.id != taskId)})
                 }
             })
     }
     const updateTask = () => {
         tasksAPI.updateTaskTitle(todolistId, taskId, taskTitle)
-            .then( res => {
+            .then(res => {
                 if (res.status === 200) {
                     if (taskState) {
                         const taskUpdate = taskState.items.find(t => t.id === taskId)
@@ -104,7 +120,7 @@ export const ApiComponent = () => {
                         setTaskState({...taskState})
                     }
                 }
-                })
+            })
             .catch(e => {
                 console.log(e)
             })
