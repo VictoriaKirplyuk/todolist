@@ -1,5 +1,4 @@
 import * as axios from "axios";
-import {ItemTaskType, TodolistType} from "./ApiComponent";
 
 const instance = axios.default.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.1',
@@ -8,6 +7,51 @@ const instance = axios.default.create({
         'API-KEY': 'ac6ed9cc-d092-4e25-9d0c-c69c23fe4d54'
     }
 })
+
+export type TodolistType = {
+    id: string
+    title: string
+    addedDate: string
+    order: number
+}
+export type StateType = Array<TodolistType> | null
+
+export type TasksType = {
+    error: null | string
+    totalCount: number
+    items: Array<ItemTaskType>
+}
+
+export enum TaskStatuses {
+    New = 0, //active
+    InProgress = 1,
+    Completed = 2, //completed
+    Draft = 3
+}
+
+// export enum TodoTaskPriority {
+//     Low = 0,
+//     Middle = 1,
+//     Hi = 2,
+//     urgently = 3,
+//     Later = 4
+// }
+
+export type ItemTaskType = {
+    id: string
+    title: string
+    description: null | string
+    todoListId: string
+    order: number | null
+    status: TaskStatuses
+    priority: number
+    startDate: null | string
+    deadline: null | string
+    addedDate: string
+}
+
+
+export type TaskStateType = TasksType | null
 
 type ResponseType<D> = {
     data: D
