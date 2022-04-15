@@ -6,14 +6,13 @@ import {AddItemForm} from './AddItemForm';
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from '@material-ui/core';
 import {Menu} from '@material-ui/icons';
 import {
-    addTodolistAC,
     changeTodolistFilterAC,
     changeTodolistTitleAC,
     removeTodolistAC,
     todolistsReducer
 } from './state/todolists-reducer';
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './state/tasks-reducer';
-import {ItemTaskType, TaskStatuses} from "./ApiComponent";
+import {changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './state/tasks-reducer';
+import {ItemTaskType, TaskStatuses} from "./API";
 
 export type FilterValuesType = "all" | "active" | "completed";
 
@@ -52,8 +51,7 @@ function AppWithReducers() {
     }
 
     function addTask(title: string, todolistId: string) {
-        const action = addTaskAC(title, todolistId);
-        dispatchToTasks(action);
+        //different logic
     }
 
     function changeStatus(id: string, status: TaskStatuses, todolistId: string) {
@@ -83,9 +81,7 @@ function AppWithReducers() {
     }
 
     function addTodolist(title: string) {
-        const action = addTodolistAC(title);
-        dispatchToTasks(action);
-        dispatchToTodolists(action);
+        //different logic
     }
 
     return (

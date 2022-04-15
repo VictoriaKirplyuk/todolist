@@ -5,8 +5,8 @@ import {v1} from 'uuid';
 import {AddItemForm} from './AddItemForm';
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from '@material-ui/core';
 import {Menu} from '@material-ui/icons';
-import {ItemTaskType, TaskStatuses} from "./ApiComponent";
 import {FilterValuesType, TodolistDomenType} from "./AppWithRedux";
+import {ItemTaskType, TaskStatuses} from "./API";
 
 export type TasksStateType = {
     [key: string]: Array<ItemTaskType>
