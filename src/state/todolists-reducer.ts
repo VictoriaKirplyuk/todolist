@@ -1,5 +1,5 @@
-import {FilterValuesType, TodolistDomenType} from "../AppWithRedux";
-import {todolistAPI, TodolistType} from "../API";
+import {FilterValuesType, TodolistDomenType} from "../app/AppWithRedux";
+import {todolistAPI, TodolistType} from "../api/API";
 import {Dispatch} from "redux";
 
 const initialState: Array<TodolistDomenType> = []

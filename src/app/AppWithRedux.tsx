@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect} from 'react';
 import './App.css';
-import {Todolist} from './Todolist';
-import {AddItemForm} from './AddItemForm';
+import {Todolist} from '../features/Todolists/Todolist';
+import {AddItemForm} from '../components/AddItemForm/AddItemForm';
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from '@material-ui/core';
 import {Menu} from '@material-ui/icons';
 import {
@@ -10,15 +10,15 @@ import {
     changeTodolistTitleThunkAC,
     fetchTodolistsThunkAC,
     removeTodolistThunkAC,
-} from './state/todolists-reducer';
+} from '../state/todolists-reducer';
 import {
     addTaskThunkAC,
     updateTaskThunkAC,
     removeTaskThunkAC
-} from './state/tasks-reducer';
+} from '../state/tasks-reducer';
 import {useDispatch, useSelector} from 'react-redux';
-import {AppRootStateType} from './state/store';
-import {ItemTaskType, TaskStatuses, TodolistType} from "./API";
+import {AppRootStateType} from '../state/store';
+import {ItemTaskType, TaskStatuses, TodolistType} from "../api/API";
 
 export type FilterValuesType = "all" | "active" | "completed";
 
