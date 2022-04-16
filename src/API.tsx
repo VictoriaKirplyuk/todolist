@@ -8,6 +8,10 @@ const instance = axios.default.create({
     }
 })
 
+export type UpdateDomainTaskModelType = {
+
+}
+
 export type TodolistType = {
     id: string
     title: string
@@ -70,6 +74,8 @@ type ResponseTaskType = {
     totalCount: number
     error: null | string
 }
+
+
 
 
 export const todolistAPI = {

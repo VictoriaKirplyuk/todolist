@@ -11,7 +11,7 @@ import {
     removeTodolistAC,
     todolistsReducer
 } from './state/todolists-reducer';
-import {changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './state/tasks-reducer';
+import {removeTaskAC, tasksReducer, updateTaskAC} from './state/tasks-reducer';
 import {ItemTaskType, TaskStatuses} from "./API";
 
 export type FilterValuesType = "all" | "active" | "completed";
@@ -55,12 +55,12 @@ function AppWithReducers() {
     }
 
     function changeStatus(id: string, status: TaskStatuses, todolistId: string) {
-        const action = changeTaskStatusAC(id, status, todolistId);
+        const action = updateTaskAC(id, { status: status }, todolistId);
         dispatchToTasks(action);
     }
 
     function changeTaskTitle(id: string, newTitle: string, todolistId: string) {
-        const action = changeTaskTitleAC(id, newTitle, todolistId);
+        const action = updateTaskAC(id, { title: newTitle }, todolistId);
         dispatchToTasks(action);
     }
 
