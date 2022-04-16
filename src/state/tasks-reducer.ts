@@ -56,15 +56,15 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
 }
 
 //thunks
-export const fetchTasksThunkAC = (todolistId: string) => (dispatch: Dispatch) => {
+export const fetchTasksThunkAC = (todolistId: string) => (dispatch: Dispatch<ActionType>) => {
     tasksAPI.getTasks(todolistId)
         .then(res => dispatch(setTasksAC(res.data.items, todolistId)))
 }
-export const addTaskThunkAC = (todolistId: string, title: string) => (dispatch: Dispatch) => {
+export const addTaskThunkAC = (todolistId: string, title: string) => (dispatch: Dispatch<ActionType>) => {
     tasksAPI.addTask(todolistId, title)
         .then(res => dispatch(addTaskAC(title, todolistId, res.data.data.item)))
 }
-export const removeTaskThunkAC = (todolistId: string, taskId: string) => (dispatch: Dispatch) => {
+export const removeTaskThunkAC = (todolistId: string, taskId: string) => (dispatch: Dispatch<ActionType>) => {
     tasksAPI.deleteTask(todolistId, taskId)
         .then(res => {
             if (res.data.resultCode === 0) {
@@ -72,33 +72,34 @@ export const removeTaskThunkAC = (todolistId: string, taskId: string) => (dispat
             }
         })
 }
-export const updateTaskThunkAC = (taskId: string, domainModel: UpdateDomainTaskModelType, todolistId: string) => (dispatch: Dispatch, getState: () => AppRootStateType) => {
+export const updateTaskThunkAC = (taskId: string, domainModel: UpdateDomainTaskModelType, todolistId: string) =>
+    (dispatch: Dispatch<ActionType>, getState: () => AppRootStateType) => {
 
-    const state = getState()
-    const task = state.tasks[todolistId].find(t => t.id === taskId)
+        const state = getState()
+        const task = state.tasks[todolistId].find(t => t.id === taskId)
 
-    if (task) {
+        if (task) {
 
-        const apiModel: UpdateTaskModelType = {
-            title: task.title,
-            description: task.description,
-            status: task.status,
-            priority: task.priority,
-            startDate: task.startDate,
-            deadline: task.deadline,
-            ...domainModel
+            const apiModel: UpdateTaskModelType = {
+                title: task.title,
+                description: task.description,
+                status: task.status,
+                priority: task.priority,
+                startDate: task.startDate,
+                deadline: task.deadline,
+                ...domainModel
+            }
+
+            tasksAPI.updateTask(todolistId, taskId, apiModel)
+                .then(res => {
+                    if (res.data.resultCode === 0) {
+                        dispatch(updateTaskAC(taskId, apiModel, todolistId))
+                    }
+                })
+        } else {
+            throw new Error('ERROR! TASK IS NOT FOUND!')
         }
-
-        tasksAPI.updateTask(todolistId, taskId, apiModel)
-            .then(res => {
-                if (res.data.resultCode === 0) {
-                    dispatch(updateTaskAC(taskId, apiModel, todolistId))
-                }
-            })
-    } else {
-        throw new Error('ERROR! TASK IS NOT FOUND!')
     }
-}
 
 
 //actions
@@ -125,10 +126,6 @@ export const setTasksAC = (tasks: Array<ItemTaskType>, todolistId: string) => ({
 } as const)
 
 //types
-export type RemoveTaskActionType = ReturnType<typeof removeTaskAC>
-export type AddTaskActionType = ReturnType<typeof addTaskAC>
-export type UpdateTaskActionType = ReturnType<typeof updateTaskAC>
-export type setTasksActionType = ReturnType<typeof setTasksAC>
 type UpdateDomainTaskModelType = {
     title?: string
     description?: null | string
@@ -138,10 +135,10 @@ type UpdateDomainTaskModelType = {
     deadline?: null | string
 }
 type ActionType =
-    | RemoveTaskActionType
-    | AddTaskActionType
-    | UpdateTaskActionType
+    | ReturnType<typeof removeTaskAC>
+    | ReturnType<typeof addTaskAC>
+    | ReturnType<typeof updateTaskAC>
     | AddTodolistActionType
     | RemoveTodolistActionType
     | setTodolistsActionType
-    | setTasksActionType
+    | ReturnType<typeof setTasksAC>
