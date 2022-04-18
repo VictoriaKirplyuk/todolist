@@ -13,6 +13,9 @@ import {
 } from '../state/todolists-reducer';
 import {removeTaskAC, tasksReducer, updateTaskAC} from '../state/tasks-reducer';
 import {ItemTaskType, TaskStatuses} from "../api/API";
+import {useSelector} from "react-redux";
+import {AppRootStateType} from "../state/store";
+import {StatusType} from "../state/app-reducer";
 
 export type FilterValuesType = "all" | "active" | "completed";
 
@@ -20,10 +23,15 @@ export type TasksStateType = {
     [key: string]: Array<ItemTaskType>
 }
 
+type AppWithReducersPropsType = {
+    demo: boolean
+}
 
-function AppWithReducers() {
+function AppWithReducers(props:AppWithReducersPropsType) {
     let todolistId1 = v1();
     let todolistId2 = v1();
+
+    const taskStatus = useSelector<AppRootStateType, StatusType>(s => s.app.taskStatus)
 
     let [todolists, dispatchToTodolists] = useReducer(todolistsReducer, [
         {id: todolistId1, title: "What to learn", filter: "all", addedDate: '', order: 0},
@@ -129,6 +137,8 @@ function AppWithReducers() {
                                         removeTodolist={removeTodolist}
                                         changeTaskTitle={changeTaskTitle}
                                         changeTodolistTitle={changeTodolistTitle}
+                                        taskStatus={taskStatus}
+                                        demo={props.demo}
                                     />
                                 </Paper>
                             </Grid>

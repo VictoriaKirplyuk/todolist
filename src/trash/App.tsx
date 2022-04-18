@@ -7,15 +7,23 @@ import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography}
 import {Menu} from '@material-ui/icons';
 import {FilterValuesType, TodolistDomenType} from "../app/AppWithRedux";
 import {ItemTaskType, TaskStatuses} from "../api/API";
+import {useSelector} from "react-redux";
+import {AppRootStateType} from "../state/store";
+import {StatusType} from "../state/app-reducer";
 
 export type TasksStateType = {
     [key: string]: Array<ItemTaskType>
 }
 
+type AppPropsType = {
+    demo: boolean
+}
 
-function App() {
+function App(props: AppPropsType) {
     let todolistId1 = v1();
     let todolistId2 = v1();
+
+    const taskStatus = useSelector<AppRootStateType, StatusType>(s => s.app.taskStatus)
 
     let [todolists, setTodolists] = useState<Array<TodolistDomenType>>([
         {id: todolistId1, title: "What to learn", filter: "all", addedDate: '', order: 0},
@@ -165,6 +173,8 @@ function App() {
                                         removeTodolist={removeTodolist}
                                         changeTaskTitle={changeTaskTitle}
                                         changeTodolistTitle={changeTodolistTitle}
+                                        taskStatus={taskStatus}
+                                        demo={props.demo}
                                     />
                                 </Paper>
                             </Grid>

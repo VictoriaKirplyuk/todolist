@@ -8,6 +8,8 @@ import {FilterValuesType} from "../../app/AppWithRedux";
 import {ItemTaskType, TaskStatuses} from "../../api/API";
 import {useDispatch} from "react-redux";
 import {fetchTasksThunkAC} from "../../state/tasks-reducer";
+import {StatusType} from "../../state/app-reducer";
+import {CircularProgress} from "@mui/material";
 
 type PropsType = {
     id: string
@@ -21,6 +23,8 @@ type PropsType = {
     changeTodolistTitle: (id: string, newTitle: string) => void
     filter: FilterValuesType
     changeTaskTitle: (taskId: string, newTitle: string, todolistId: string) => void
+    taskStatus: StatusType
+    demo: boolean
 }
 
 export const Todolist = React.memo((props: PropsType) => {
@@ -29,9 +33,12 @@ export const Todolist = React.memo((props: PropsType) => {
 
     const dispatch = useDispatch()
 
-    useEffect( () => {
+    useEffect(() => {
+        if(props.demo) {
+            return
+        }
         dispatch(fetchTasksThunkAC(props.id))
-    } ,[])
+    }, [])
 
     const addTask = useCallback((title: string) => {
         props.addTask(title, props.id);
@@ -66,18 +73,19 @@ export const Todolist = React.memo((props: PropsType) => {
         </h3>
         <AddItemForm addItem={addTask}/>
         <div>
-            {
-                props.tasks && tasksForTodolist.map(t => {
-                    return <Task key={t.id}
-                                 title={t.title}
-                                 taskId={t.id}
-                                 status={t.status}
-                                 todolistId={props.id}
-                                 removeTask={props.removeTask}
-                                 changeTaskStatus={props.changeTaskStatus}
-                                 changeTaskTitle={props.changeTaskTitle}
-                    />
-                })
+            {props.taskStatus === 'loading'
+                ? <CircularProgress/>
+                : props.tasks && tasksForTodolist.map(t => {
+                return <Task key={t.id}
+                title={t.title}
+                taskId={t.id}
+                status={t.status}
+                todolistId={props.id}
+                removeTask={props.removeTask}
+                changeTaskStatus={props.changeTaskStatus}
+                changeTaskTitle={props.changeTaskTitle}
+                />
+            })
             }
         </div>
         <div style={{paddingTop: "10px"}}>
