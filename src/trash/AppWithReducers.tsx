@@ -1,9 +1,15 @@
 import React, {useReducer} from 'react';
 import '../app/App.css';
-import {Todolist} from '../features/Todolists/Todolist';
 import {v1} from 'uuid';
-import {AddItemForm} from '../components/AddItemForm/AddItemForm';
-import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from '@material-ui/core';
+import {
+    AppBar,
+    Button,
+    Container,
+    IconButton,
+    LinearProgress,
+    Toolbar,
+    Typography
+} from '@material-ui/core';
 import {Menu} from '@material-ui/icons';
 import {
     changeTodolistFilterAC,
@@ -16,6 +22,8 @@ import {ItemTaskType, TaskStatuses} from "../api/API";
 import {useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
 import {StatusType} from "../state/app-reducer";
+import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
+import {TodolistList} from "../features/TodolistList/TodolistList";
 
 export type FilterValuesType = "all" | "active" | "completed";
 
@@ -31,11 +39,11 @@ function AppWithReducers(props:AppWithReducersPropsType) {
     let todolistId1 = v1();
     let todolistId2 = v1();
 
-    const taskStatus = useSelector<AppRootStateType, StatusType>(s => s.app.taskStatus)
+    const status = useSelector<AppRootStateType, StatusType>(s => s.app.appStatus)
 
     let [todolists, dispatchToTodolists] = useReducer(todolistsReducer, [
-        {id: todolistId1, title: "What to learn", filter: "all", addedDate: '', order: 0},
-        {id: todolistId2, title: "What to buy", filter: "all", addedDate: '', order: 0}
+        {id: todolistId1, title: "What to learn", filter: "all", addedDate: '', order: 0, entityStatus: 'idle'},
+        {id: todolistId2, title: "What to buy", filter: "all", addedDate: '', order: 0, entityStatus: 'idle'}
     ])
 
     let [tasks, dispatchToTasks] = useReducer(tasksReducer, {
@@ -105,47 +113,11 @@ function AppWithReducers(props:AppWithReducersPropsType) {
                     <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
+            {status === 'loading' && <LinearProgress/>}
             <Container fixed>
-                <Grid container style={{padding: "20px"}}>
-                    <AddItemForm addItem={addTodolist}/>
-                </Grid>
-                <Grid container spacing={3}>
-                    {
-                        todolists.map(tl => {
-                            let allTodolistTasks = tasks[tl.id];
-                            let tasksForTodolist = allTodolistTasks;
-
-                            if (tl.filter === "active") {
-                                tasksForTodolist = allTodolistTasks.filter(t => t.status === TaskStatuses.New);
-                            }
-                            if (tl.filter === "completed") {
-                                tasksForTodolist = allTodolistTasks.filter(t => t.status === TaskStatuses.Completed);
-                            }
-
-                            return <Grid item>
-                                <Paper style={{padding: "10px"}}>
-                                    <Todolist
-                                        key={tl.id}
-                                        id={tl.id}
-                                        title={tl.title}
-                                        tasks={tasksForTodolist}
-                                        removeTask={removeTask}
-                                        changeFilter={changeFilter}
-                                        addTask={addTask}
-                                        changeTaskStatus={changeStatus}
-                                        filter={tl.filter}
-                                        removeTodolist={removeTodolist}
-                                        changeTaskTitle={changeTaskTitle}
-                                        changeTodolistTitle={changeTodolistTitle}
-                                        taskStatus={taskStatus}
-                                        demo={props.demo}
-                                    />
-                                </Paper>
-                            </Grid>
-                        })
-                    }
-                </Grid>
+                <TodolistList demo={props.demo}/>
             </Container>
+            <ErrorSnackbar/>
         </div>
     );
 }

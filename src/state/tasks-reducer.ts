@@ -3,7 +3,7 @@ import {TasksStateType} from "../app/AppWithRedux";
 import {ItemTaskType, tasksAPI, TaskStatuses, UpdateTaskModelType} from "../api/API";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "./store";
-import {AppActionType, setErrorAC, setStatusAC, setTaskStatusAC} from "./app-reducer";
+import {AppActionType, setAppErrorAC, setAppStatusAC, setAppTaskStatusAC} from "./app-reducer";
 
 const initialState: TasksStateType = {}
 
@@ -58,47 +58,65 @@ export const tasksReducer = (state: TasksStateType = initialState, action: Actio
 
 //thunks
 export const fetchTasksThunkAC = (todolistId: string) => (dispatch: Dispatch<ActionType | AppActionType>) => {
-    dispatch(setTaskStatusAC('loading'))
+    dispatch(setAppTaskStatusAC('loading'))
     tasksAPI.getTasks(todolistId)
         .then(res => {
             if(res.status <= 200) {
                 dispatch(setTasksAC(res.data.items, todolistId))
-                dispatch(setTaskStatusAC('succeeded'))
+                dispatch(setAppTaskStatusAC('succeeded'))
             } else {
                 console.log(res)
-                dispatch(setTaskStatusAC('failed'))
+                dispatch(setAppTaskStatusAC('failed'))
             }
+        })
+        .catch( err => {
+            console.error(err)
         })
 }
 export const addTaskThunkAC = (todolistId: string, title: string) => (dispatch: Dispatch<ActionType | AppActionType>) => {
-    dispatch(setStatusAC('loading'))
+    dispatch(setAppStatusAC('loading'))
     tasksAPI.addTask(todolistId, title)
         .then(res => {
             if(res.data.resultCode === 0) {
                 dispatch(addTaskAC(title, todolistId, res.data.data.item))
-                dispatch(setStatusAC('succeeded'))
+                dispatch(setAppStatusAC('succeeded'))
             } else {
-                dispatch(setErrorAC(res.data.messages[0]))
-                dispatch(setStatusAC('failed'))
+                if(res.data.messages.length) {
+                    dispatch(setAppErrorAC(res.data.messages[0]))
+                    dispatch(setAppStatusAC('failed'))
+                } else {
+                    dispatch(setAppErrorAC('Some error occurred'))
+                }
             }
+        })
+        .catch( err => {
+            console.error(err)
         })
 }
 
 export const removeTaskThunkAC = (todolistId: string, taskId: string) => (dispatch: Dispatch<ActionType | AppActionType>) => {
-    dispatch(setStatusAC('loading'))
+    dispatch(setAppStatusAC('loading'))
     tasksAPI.deleteTask(todolistId, taskId)
         .then(res => {
             if (res.data.resultCode === 0) {
                 dispatch(removeTaskAC(taskId, todolistId))
-                dispatch(setStatusAC('succeeded'))
+                dispatch(setAppStatusAC('succeeded'))
             } else {
-                dispatch(setStatusAC('failed'))
+                if(res.data.messages.length) {
+                    dispatch(setAppErrorAC(res.data.messages[0]))
+                    dispatch(setAppStatusAC('failed'))
+                } else {
+                    dispatch(setAppErrorAC('Some error occurred'))
+                }
             }
+        })
+        .catch( err => {
+            console.error(err)
         })
 }
 export const updateTaskThunkAC = (taskId: string, domainModel: UpdateDomainTaskModelType, todolistId: string) =>
     (dispatch: Dispatch<ActionType | AppActionType>, getState: () => AppRootStateType) => {
-        dispatch(setStatusAC('loading'))
+        dispatch(setAppStatusAC('loading'))
         const state = getState()
         const task = state.tasks[todolistId].find(t => t.id === taskId)
 
@@ -118,11 +136,18 @@ export const updateTaskThunkAC = (taskId: string, domainModel: UpdateDomainTaskM
                 .then(res => {
                     if (res.data.resultCode === 0) {
                         dispatch(updateTaskAC(taskId, apiModel, todolistId))
-                        dispatch(setStatusAC('succeeded'))
+                        dispatch(setAppStatusAC('succeeded'))
                     } else {
-                        dispatch(setErrorAC(res.data.messages[0]))
-                        dispatch(setStatusAC('failed'))
+                        if(res.data.messages.length) {
+                            dispatch(setAppErrorAC(res.data.messages[0]))
+                            dispatch(setAppStatusAC('failed'))
+                        } else {
+                            dispatch(setAppErrorAC('Some error occurred'))
+                        }
                     }
+                })
+                .catch( err => {
+                    console.error(err)
                 })
         } else {
             throw new Error('ERROR! TASK IS NOT FOUND!')

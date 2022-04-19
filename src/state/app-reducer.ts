@@ -1,38 +1,38 @@
 export type AppStateType = {
-    status: StatusType
-    taskStatus: StatusType
-    error: ErrorType
+    appStatus: StatusType
+    appTaskStatus: StatusType
+    appError: AppErrorType
 }
 export type StatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
-export type ErrorType = string | null
+export type AppErrorType = string | null
 
 export type AppActionType =
-    | ReturnType<typeof setErrorAC>
-    | ReturnType<typeof setStatusAC>
-    | ReturnType<typeof setTaskStatusAC>
+    | ReturnType<typeof setAppErrorAC>
+    | ReturnType<typeof setAppStatusAC>
+    | ReturnType<typeof setAppTaskStatusAC>
 
 const initialState: AppStateType = {
-    status: 'idle',
-    taskStatus: 'idle',
-    error: null
+    appStatus: 'idle',
+    appTaskStatus: 'idle',
+    appError: null
 }
 
 export const appReducer = (state: AppStateType = initialState, action: AppActionType): AppStateType => {
     switch (action.type) {
         case 'APP/SET-STATUS':
-            return {...state, status: action.status}
+            return {...state, appStatus: action.appStatus}
         case 'APP/SET-TASK-STATUS':
-            return {...state, taskStatus: action.taskStatus}
+            return {...state, appTaskStatus: action.appTaskStatus}
         case 'APP/SET-ERROR':
-            return {...state, error: action.error}
+            return {...state, appError: action.appError}
         default:
             return state
     }
 }
 
-export const setStatusAC = (status: StatusType) => ({type: 'APP/SET-STATUS', status: status} as const)
-export const setTaskStatusAC = (taskStatus: StatusType) => ({
+export const setAppStatusAC = (appStatus: StatusType) => ({type: 'APP/SET-STATUS', appStatus: appStatus} as const)
+export const setAppTaskStatusAC = (appTaskStatus: StatusType) => ({
     type: 'APP/SET-TASK-STATUS',
-    taskStatus: taskStatus
+    appTaskStatus: appTaskStatus
 } as const)
-export const setErrorAC = (error: ErrorType) => ({type: 'APP/SET-ERROR', error: error} as const)
+export const setAppErrorAC = (appError: AppErrorType) => ({type: 'APP/SET-ERROR', appError: appError} as const)

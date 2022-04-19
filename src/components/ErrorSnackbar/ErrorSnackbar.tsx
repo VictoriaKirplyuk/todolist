@@ -5,7 +5,7 @@ import MuiAlert, {AlertProps} from '@mui/material/Alert';
 import {forwardRef} from "react";
 import {AppRootStateType} from "../../state/store";
 import {useDispatch, useSelector} from "react-redux";
-import {ErrorType, setErrorAC} from "../../state/app-reducer";
+import {AppErrorType, setAppErrorAC} from "../../state/app-reducer";
 
 const Alert = forwardRef<HTMLDivElement, AlertProps>(function Alert(
     props,
@@ -22,9 +22,9 @@ export function ErrorSnackbar() {
         if (reason === 'clickaway') {
             return;
         }
-        dispatch(setErrorAC(null))
+        dispatch(setAppErrorAC(null))
     };
-    const error = useSelector<AppRootStateType, ErrorType>(s => s.app.error)
+    const error = useSelector<AppRootStateType, AppErrorType>(s => s.app.appError)
     const isOpen = error != null
 
     return (
