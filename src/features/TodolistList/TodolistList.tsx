@@ -50,7 +50,6 @@ export const TodolistList = React.memo((props: TodolistListPropsType) => {
         const action = changeTodolistFilterAC(todolistId, value);
         dispatch(action);
     }, [])
-
     const addTodolist = useCallback((title: string) => {
         dispatch(addTodolistThunkAC(title))
     }, [])

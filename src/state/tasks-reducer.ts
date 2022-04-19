@@ -3,7 +3,8 @@ import {TasksStateType} from "../app/AppWithRedux";
 import {ItemTaskType, tasksAPI, TaskStatuses, UpdateTaskModelType} from "../api/API";
 import {Dispatch} from "redux";
 import {AppRootStateType} from "./store";
-import {AppActionType, setAppErrorAC, setAppStatusAC, setAppTaskStatusAC} from "./app-reducer";
+import {AppActionType, setAppStatusAC, setAppTaskStatusAC} from "./app-reducer";
+import {handleServerAppError} from "../error-utils";
 
 const initialState: TasksStateType = {}
 
@@ -81,12 +82,7 @@ export const addTaskThunkAC = (todolistId: string, title: string) => (dispatch: 
                 dispatch(addTaskAC(title, todolistId, res.data.data.item))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
-                if(res.data.messages.length) {
-                    dispatch(setAppErrorAC(res.data.messages[0]))
-                    dispatch(setAppStatusAC('failed'))
-                } else {
-                    dispatch(setAppErrorAC('Some error occurred'))
-                }
+                handleServerAppError(res.data, dispatch)
             }
         })
         .catch( err => {
@@ -102,12 +98,7 @@ export const removeTaskThunkAC = (todolistId: string, taskId: string) => (dispat
                 dispatch(removeTaskAC(taskId, todolistId))
                 dispatch(setAppStatusAC('succeeded'))
             } else {
-                if(res.data.messages.length) {
-                    dispatch(setAppErrorAC(res.data.messages[0]))
-                    dispatch(setAppStatusAC('failed'))
-                } else {
-                    dispatch(setAppErrorAC('Some error occurred'))
-                }
+                handleServerAppError(res.data, dispatch)
             }
         })
         .catch( err => {
@@ -138,12 +129,7 @@ export const updateTaskThunkAC = (taskId: string, domainModel: UpdateDomainTaskM
                         dispatch(updateTaskAC(taskId, apiModel, todolistId))
                         dispatch(setAppStatusAC('succeeded'))
                     } else {
-                        if(res.data.messages.length) {
-                            dispatch(setAppErrorAC(res.data.messages[0]))
-                            dispatch(setAppStatusAC('failed'))
-                        } else {
-                            dispatch(setAppErrorAC('Some error occurred'))
-                        }
+                        handleServerAppError(res.data, dispatch)
                     }
                 })
                 .catch( err => {
