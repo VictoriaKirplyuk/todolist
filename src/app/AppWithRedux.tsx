@@ -16,6 +16,11 @@ import {ItemTaskType, TodolistType} from "../api/API";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
 import {StatusType} from "../state/app-reducer";
 import {TodolistList} from "../features/TodolistList/TodolistList";
+import {
+    Routes,
+    Route,
+} from "react-router-dom";
+import {Login} from "../features/Login/Login";
 
 export type FilterValuesType = "all" | "active" | "completed";
 
@@ -52,7 +57,10 @@ function AppWithRedux(props: AppWithReduxPropsType) {
             </AppBar>
             {status === 'loading' && <LinearProgress/>}
             <Container fixed>
-                <TodolistList demo={props.demo}/>
+                <Routes>
+                    <Route path="/" element={<TodolistList demo={props.demo}/>}/>
+                    <Route path={'/login'} element={<Login/>}/>
+                </Routes>
             </Container>
             <ErrorSnackbar/>
         </div>
