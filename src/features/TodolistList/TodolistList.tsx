@@ -14,6 +14,7 @@ import {
 } from "../../state/todolists-reducer";
 import {addTaskThunkAC, removeTaskThunkAC, updateTaskThunkAC} from "../../state/tasks-reducer";
 import {TaskStatuses} from "../../api/API";
+import {Navigate} from "react-router-dom";
 
 type TodolistListPropsType = {
     demo: boolean
@@ -25,6 +26,7 @@ export const TodolistList = React.memo((props: TodolistListPropsType) => {
     const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists)
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
     const appTaskStatus = useSelector<AppRootStateType, StatusType>(s => s.app.appTaskStatus)
+    const isAuth = useSelector<AppRootStateType, boolean>(s => s.app.isAuth)
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -60,7 +62,9 @@ export const TodolistList = React.memo((props: TodolistListPropsType) => {
         dispatch(changeTodolistTitleThunkAC(id, title))
     }, [])
 
-
+    if(!isAuth) {
+        return <Navigate to={'/login'}/>
+    }
 
     return(<div>
         <Grid container style={{padding: "20px"}}>

@@ -6,7 +6,8 @@ beforeEach(() => {
     startState = {
         appStatus: 'idle',
         appTaskStatus: 'idle',
-        appError: null
+        appError: null,
+        isAuth: false
     }
 });
 

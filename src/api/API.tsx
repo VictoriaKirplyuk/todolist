@@ -82,10 +82,18 @@ type isLoggedInType = {
     captcha?: string
 }
 
+type AuthType = {
+    id: number
+    email: string
+    login: string
+}
 
 export const authAPI = {
     login(data: isLoggedInType) {
         return instance.post<ResponseType<{userId: number}>>('/auth/login', data)
+    },
+    me() {
+        return instance.get<ResponseType<AuthType>>('/auth/me')
     }
 }
 
@@ -110,12 +118,12 @@ export const tasksAPI = {
         return instance.get<ResponseTaskType>(`/todo-lists/${todolistId}/tasks`)
     },
     addTask(todolistId: string, title: string) {
-        return instance.post<ResponseType<{item: ItemTaskType}>>(`/todo-lists/${todolistId}/tasks`, {title: title})
+        return instance.post<ResponseType<{ item: ItemTaskType }>>(`/todo-lists/${todolistId}/tasks`, {title: title})
     },
     deleteTask(todolistId: string, taskId: string) {
         return instance.delete<ResponseType<{}>>(`/todo-lists/${todolistId}/tasks/${taskId}`)
     },
     updateTask(todolistId: string, taskId: string, model: UpdateTaskModelType) {
-        return instance.put<ResponseType<{item: ItemTaskType}>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
+        return instance.put<ResponseType<{ item: ItemTaskType }>>(`/todo-lists/${todolistId}/tasks/${taskId}`, model)
     }
 }

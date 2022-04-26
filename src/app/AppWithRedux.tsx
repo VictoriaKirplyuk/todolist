@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './App.css';
 import {
     AppBar,
@@ -10,15 +10,16 @@ import {
     Typography
 } from '@material-ui/core';
 import {Menu} from '@material-ui/icons';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../state/store';
-import {ItemTaskType, TodolistType} from "../api/API";
+import {authAPI, ItemTaskType, TodolistType} from "../api/API";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
-import {StatusType} from "../state/app-reducer";
+import {setIsAuth, StatusType} from "../state/app-reducer";
 import {TodolistList} from "../features/TodolistList/TodolistList";
 import {
     Routes,
     Route,
+    Navigate
 } from "react-router-dom";
 import {Login} from "../features/Login/Login";
 
@@ -41,6 +42,16 @@ function AppWithRedux(props: AppWithReduxPropsType) {
     console.log("App is called")
 
     const status = useSelector<AppRootStateType, StatusType>(s => s.app.appStatus)
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        authAPI.me()
+            .then( res => {
+                if(res.data.resultCode === 0) {
+                    dispatch(setIsAuth(true))
+                }
+            })
+    }, [])
 
     return (
         <div className="App">
