@@ -75,8 +75,19 @@ type ResponseTaskType = {
     error: null | string
 }
 
+type isLoggedInType = {
+    email: string,
+    password: string,
+    rememberMe: boolean,
+    captcha?: string
+}
 
 
+export const authAPI = {
+    login(data: isLoggedInType) {
+        return instance.post<ResponseType<{userId: number}>>('/auth/login', data)
+    }
+}
 
 export const todolistAPI = {
     getTodolists() {

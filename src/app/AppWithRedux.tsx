@@ -58,7 +58,7 @@ function AppWithRedux(props: AppWithReduxPropsType) {
             {status === 'loading' && <LinearProgress/>}
             <Container fixed>
                 <Routes>
-                    <Route path="/" element={<TodolistList demo={props.demo}/>}/>
+                    <Route path='/' element={<TodolistList demo={props.demo}/>}/>
                     <Route path={'/login'} element={<Login/>}/>
                 </Routes>
             </Container>
