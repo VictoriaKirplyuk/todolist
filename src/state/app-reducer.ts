@@ -1,6 +1,6 @@
 import {Dispatch} from "redux";
 import {authAPI} from "../api/API";
-import {setIsLoggedInAC} from "./login-reducer";
+import {LoginActionType, setIsLoggedInAC} from "./login-reducer";
 
 export type AppStateType = {
     appStatus: StatusType
@@ -48,15 +48,15 @@ export const setAppErrorAC = (appError: AppErrorType) => ({type: 'APP/SET-ERROR'
 export const setIsAuthAC = (isAuth: boolean) => ({type: 'APP/IS-AUTH', isAuth: isAuth} as const)
 
 
-export const setIsAuthTC = () => (dispatch: Dispatch) => {
+export const setIsAuthTC = () => (dispatch: Dispatch<LoginActionType | AppActionType>) => {
     authAPI.me()
-        .then( res => {
-            if(res.data.resultCode === 0) {
+        .then(res => {
+            if (res.data.resultCode === 0) {
                 dispatch(setIsLoggedInAC(true))
                 dispatch(setIsAuthAC(true))
             } else {
                 dispatch(setIsAuthAC(true))
             }
         })
-
+        .catch(err => console.log(err))
 }
