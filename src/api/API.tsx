@@ -75,7 +75,7 @@ type ResponseTaskType = {
     error: null | string
 }
 
-type isLoggedInType = {
+export type isLoggedInType = {
     email: string,
     password: string,
     rememberMe: boolean,

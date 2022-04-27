@@ -8,11 +8,11 @@ import FormLabel from '@mui/material/FormLabel';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from "formik";
-import {authAPI} from "../../api/API";
 import {useDispatch, useSelector} from "react-redux";
-import {setIsLoggedInAC} from "../../state/login-reducer";
+import {setIsLoggedInThunkAC} from "../../state/login-reducer";
 import {AppRootStateType} from "../../state/store";
 import {Navigate} from "react-router-dom"
+
 
 export const Login = () => {
 
@@ -26,19 +26,13 @@ export const Login = () => {
             rememberMe: false
         },
         onSubmit: values => {
-            authAPI.login(values)
-                .then( res => {
-                    if(res.data.resultCode === 0) {
-                        dispatch(setIsLoggedInAC(true))
-                    }
-                })
-
+            dispatch(setIsLoggedInThunkAC(values))
         },
     });
 
     if(isLoggedIn) {
-        return  <Navigate to={"/"}/>
-    }
+        return  <Navigate to={"/"} />
+     }
 
     return <Grid container justifyContent={'center'}>
         <Grid item justifyContent={'center'}>

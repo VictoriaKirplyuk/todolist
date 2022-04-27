@@ -1,3 +1,6 @@
+import {Dispatch} from "redux";
+import {authAPI, isLoggedInType} from "../api/API";
+
 type loginStateType= {
     isLoggedIn: boolean
 }
@@ -18,3 +21,11 @@ export const loginReducer = (state: loginStateType = initialState, action: Login
 }
 
 export const setIsLoggedInAC = (value: boolean) => ({type: 'APP/SET-IS-LOGGED-IN', value: value} as const)
+export const setIsLoggedInThunkAC = (values: isLoggedInType) => (dispatch: Dispatch) => {
+    authAPI.login(values)
+        .then( res => {
+            if(res.data.resultCode === 0) {
+                dispatch(setIsLoggedInAC(true))
+            }
+        })
+}

@@ -7,19 +7,18 @@ import {
     LinearProgress,
     IconButton,
     Toolbar,
-    Typography
+    Typography, CircularProgress
 } from '@material-ui/core';
 import {Menu} from '@material-ui/icons';
 import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../state/store';
-import {authAPI, ItemTaskType, TodolistType} from "../api/API";
+import {ItemTaskType, TodolistType} from "../api/API";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
-import {setIsAuth, StatusType} from "../state/app-reducer";
+import {setIsAuthThunkAC, StatusType} from "../state/app-reducer";
 import {TodolistList} from "../features/TodolistList/TodolistList";
 import {
     Routes,
-    Route,
-    Navigate
+    Route
 } from "react-router-dom";
 import {Login} from "../features/Login/Login";
 
@@ -42,16 +41,19 @@ function AppWithRedux(props: AppWithReduxPropsType) {
     console.log("App is called")
 
     const status = useSelector<AppRootStateType, StatusType>(s => s.app.appStatus)
+    const isAuth = useSelector<AppRootStateType, boolean>(s => s.app.isAuth)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        authAPI.me()
-            .then( res => {
-                if(res.data.resultCode === 0) {
-                    dispatch(setIsAuth(true))
-                }
-            })
+        dispatch(setIsAuthThunkAC())
     }, [])
+
+    if (!isAuth) {
+        return <div
+            style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+            <CircularProgress/>
+        </div>
+    }
 
     return (
         <div className="App">

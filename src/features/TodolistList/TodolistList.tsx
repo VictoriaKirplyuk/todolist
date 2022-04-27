@@ -26,11 +26,11 @@ export const TodolistList = React.memo((props: TodolistListPropsType) => {
     const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists)
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
     const appTaskStatus = useSelector<AppRootStateType, StatusType>(s => s.app.appTaskStatus)
-    const isAuth = useSelector<AppRootStateType, boolean>(s => s.app.isAuth)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(s => s.login.isLoggedIn)
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if(props.demo) {
+        if(props.demo || !isLoggedIn) {
             return
         }
         dispatch(fetchTodolistsThunkAC())
@@ -62,8 +62,8 @@ export const TodolistList = React.memo((props: TodolistListPropsType) => {
         dispatch(changeTodolistTitleThunkAC(id, title))
     }, [])
 
-    if(!isAuth) {
-        return <Navigate to={'/login'}/>
+    if(!isLoggedIn) {
+        return <Navigate to={'/login'} /> //replace
     }
 
     return(<div>
