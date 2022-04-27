@@ -1,4 +1,4 @@
-import {appReducer, AppStateType, setAppErrorAC, setAppStatusAC, setAppTaskStatusAC} from "./app-reducer";
+import {appReducer, AppStateType, setAppErrorAC, setAppStatusAC, setAppTaskStatusAC, setInitializationAC} from "./app-reducer";
 
 let startState: AppStateType
 
@@ -7,11 +7,11 @@ beforeEach(() => {
         appStatus: 'idle',
         appTaskStatus: 'idle',
         appError: null,
-        isAuth: false
+        initialization: false
     }
 });
 
-test('Status of app should be changed', () => {
+test('status of app should be changed', () => {
     const action = setAppStatusAC('succeeded')
 
     const endState = appReducer(startState, action)
@@ -20,7 +20,7 @@ test('Status of app should be changed', () => {
     expect(endState.appTaskStatus).toBe('idle')
 });
 
-test('Status of the specified app task must be changed', () => {
+test('status of the specified app task must be changed', () => {
     const action = setAppTaskStatusAC('failed')
 
     const endState = appReducer(startState, action)
@@ -29,7 +29,7 @@ test('Status of the specified app task must be changed', () => {
     expect(endState.appStatus).toBe('idle')
 });
 
-test('Error of the specified app must be changed', () => {
+test('error of the specified app must be changed', () => {
     const action = setAppErrorAC('Error getting data')
 
     const endState = appReducer(startState, action)
@@ -38,3 +38,12 @@ test('Error of the specified app must be changed', () => {
     expect(endState.appStatus).toBe('idle')
     expect(endState.appTaskStatus).toBe('idle')
 });
+
+
+test('initialization of the specified app must be changed', () => {
+    const action = setInitializationAC(true)
+
+    const endState = appReducer(startState, action)
+
+    expect(endState.initialization).toBe(true)
+})

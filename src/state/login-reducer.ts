@@ -3,15 +3,9 @@ import {authAPI, isLoggedInType} from "../api/API";
 import {AppActionType} from "./app-reducer";
 import {handleServerAppError} from "../error-utils";
 
-type loginStateType= {
-    isLoggedIn: boolean
-}
-
 const initialState: loginStateType = {
     isLoggedIn: false
 }
-
-export type LoginActionType = ReturnType<typeof setIsLoggedInAC>
 
 export const loginReducer = (state: loginStateType = initialState, action: LoginActionType): loginStateType => {
     switch (action.type) {
@@ -22,7 +16,7 @@ export const loginReducer = (state: loginStateType = initialState, action: Login
     }
 }
 
-export const setIsLoggedInAC = (value: boolean) => ({type: 'APP/SET-IS-LOGGED-IN', value: value} as const)
+//thunks
 export const setIsLoggedInTC = (values: isLoggedInType) => (dispatch: Dispatch<LoginActionType | AppActionType>) => {
     authAPI.login(values)
         .then( res => {
@@ -36,3 +30,13 @@ export const setIsLoggedInTC = (values: isLoggedInType) => (dispatch: Dispatch<L
             console.error(err)
         })
 }
+
+//actions
+export const setIsLoggedInAC = (value: boolean) => ({type: 'APP/SET-IS-LOGGED-IN', value: value} as const)
+
+//types
+export type loginStateType= {
+    isLoggedIn: boolean
+}
+
+export type LoginActionType = ReturnType<typeof setIsLoggedInAC>

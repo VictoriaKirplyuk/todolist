@@ -14,7 +14,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../state/store';
 import {ItemTaskType, TodolistType} from "../api/API";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
-import {setIsAuthTC, StatusType} from "../state/app-reducer";
+import {setInitializationTC, StatusType} from "../state/app-reducer";
 import {TodolistList} from "../features/TodolistList/TodolistList";
 import {
     Routes,
@@ -41,14 +41,14 @@ function AppWithRedux(props: AppWithReduxPropsType) {
     console.log("App is called")
 
     const status = useSelector<AppRootStateType, StatusType>(s => s.app.appStatus)
-    const isAuth = useSelector<AppRootStateType, boolean>(s => s.app.isAuth)
+    const initialization = useSelector<AppRootStateType, boolean>(s => s.app.initialization)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(setIsAuthTC())
+        dispatch(setInitializationTC())
     }, [])
 
-    if (!isAuth) {
+    if (!initialization) {
         return <div
             style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
             <CircularProgress/>
