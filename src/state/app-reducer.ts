@@ -48,7 +48,7 @@ export const setAppErrorAC = (appError: AppErrorType) => ({type: 'APP/SET-ERROR'
 export const setIsAuthAC = (isAuth: boolean) => ({type: 'APP/IS-AUTH', isAuth: isAuth} as const)
 
 
-export const setIsAuthThunkAC = () => (dispatch: Dispatch) => {
+export const setIsAuthTC = () => (dispatch: Dispatch) => {
     authAPI.me()
         .then( res => {
             if(res.data.resultCode === 0) {

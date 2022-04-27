@@ -9,10 +9,15 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from "formik";
 import {useDispatch, useSelector} from "react-redux";
-import {setIsLoggedInThunkAC} from "../../state/login-reducer";
+import {setIsLoggedInTC} from "../../state/login-reducer";
 import {AppRootStateType} from "../../state/store";
 import {Navigate} from "react-router-dom"
 
+type FormikErrorType = {
+    email?: string
+    password?: string
+    rememberMe?: boolean
+}
 
 export const Login = () => {
 
@@ -25,14 +30,26 @@ export const Login = () => {
             password: '',
             rememberMe: false
         },
+        validate: values => {
+            const errors: FormikErrorType = {};
+            if (!values.email) {
+                errors.email = 'Required';
+            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+                errors.email = 'Invalid email address';
+            }
+            if(values.password.length < 6) {
+                errors.password = 'Password must be 6 or more characters'
+            }
+            return errors;
+        },
         onSubmit: values => {
-            dispatch(setIsLoggedInThunkAC(values))
+            dispatch(setIsLoggedInTC(values))
         },
     });
 
-    if(isLoggedIn) {
-        return  <Navigate to={"/"} />
-     }
+    if (isLoggedIn) {
+        return <Navigate to={"/"}/>
+    }
 
     return <Grid container justifyContent={'center'}>
         <Grid item justifyContent={'center'}>
@@ -53,6 +70,7 @@ export const Login = () => {
                                    name="email"
                                    onChange={formik.handleChange}
                                    value={formik.values.email}/>
+                        {formik.errors.email ? <div style={{color: 'Red'}}>{formik.errors.email}</div> : null}
                         <TextField type="password"
                                    label="Password"
                                    margin="normal"
@@ -60,6 +78,7 @@ export const Login = () => {
                                    onChange={formik.handleChange}
                                    value={formik.values.password}
                         />
+                        {formik.errors.password ? <div style={{color: 'Red'}}>{formik.errors.password}</div> : null}
                         <FormControlLabel label={'Remember me'}
                                           control={<Checkbox
                                               name="rememberMe"

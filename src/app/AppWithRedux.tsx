@@ -14,7 +14,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {AppRootStateType} from '../state/store';
 import {ItemTaskType, TodolistType} from "../api/API";
 import {ErrorSnackbar} from "../components/ErrorSnackbar/ErrorSnackbar";
-import {setIsAuthThunkAC, StatusType} from "../state/app-reducer";
+import {setIsAuthTC, StatusType} from "../state/app-reducer";
 import {TodolistList} from "../features/TodolistList/TodolistList";
 import {
     Routes,
@@ -45,7 +45,7 @@ function AppWithRedux(props: AppWithReduxPropsType) {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(setIsAuthThunkAC())
+        dispatch(setIsAuthTC())
     }, [])
 
     if (!isAuth) {
