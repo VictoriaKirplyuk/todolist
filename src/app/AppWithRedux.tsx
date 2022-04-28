@@ -21,6 +21,7 @@ import {
     Route
 } from "react-router-dom";
 import {Login} from "../features/Login/Login";
+import {logoutTC} from "../state/login-reducer";
 
 export type FilterValuesType = "all" | "active" | "completed";
 
@@ -42,11 +43,16 @@ function AppWithRedux(props: AppWithReduxPropsType) {
 
     const status = useSelector<AppRootStateType, StatusType>(s => s.app.appStatus)
     const initialization = useSelector<AppRootStateType, boolean>(s => s.app.initialization)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(s => s.login.isLoggedIn)
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(setInitializationTC())
     }, [])
+
+    const logout = () => {
+        dispatch(logoutTC())
+    }
 
     if (!initialization) {
         return <div
@@ -65,7 +71,7 @@ function AppWithRedux(props: AppWithReduxPropsType) {
                     <Typography variant="h6">
                         News
                     </Typography>
-                    <Button color="inherit">Login</Button>
+                    { isLoggedIn ? <Button color="inherit" onClick={logout}>Log out</Button> : null }
                 </Toolbar>
             </AppBar>
             {status === 'loading' && <LinearProgress/>}
